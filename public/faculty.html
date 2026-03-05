@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Faculty Dashboard - Sim Lab</title>
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+  <header style="display: flex; align-items: center; padding: 10px; background-color: #f2f2f2;">
+    <img src="clg-logo.jpg" alt="Sri Eshwar Logo" style="height: 80px; margin-right: 15px;">
+    <div>
+      <h2>Sri Eshwar College of Engineering</h2>
+      <p>Autonomous Institution | Coimbatore, Tamil Nadu</p>
+    </div>
+  </header>
+  <hr>
+
+  <div class="container">
+    <h2>On-Duty Applications</h2>
+    <div id="applicationList">Loading...</div>
+  </div>
+
+  <!-- Firebase SDK -->
+
+  <!-- Firebase SDKs (Compat Version) -->
+<script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-firestore-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-auth-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-analytics-compat.js"></script>
+
+
+  <!-- Firebase Config & Logic -->
+  <script src="firebase-config.js"></script>
+  <script src="faculty.js"></script>
+</body>
+</html>

@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Admin Panel - Sim Lab</title>
+</head>
+<body>
+  <header style="display: flex; align-items: center; padding: 10px; background-color: #f2f2f2;">
+    <img src="clg-logo.jpg" alt="Sri Eshwar Logo" style="height: 80px; margin-right: 15px;">
+    <div>
+      <h2>Sri Eshwar College of Engineering</h2>
+      <p>Autonomous Institution | Coimbatore, Tamil Nadu</p>
+    </div>
+  </header>
+  <hr>
+
+  <h2>All On-Duty Applications (Admin View)</h2>
+  <ul id="adminApplicationList"></ul>
+
+  <!-- Firebase SDK -->
+  <script src="https://www.gstatic.com/firebasejs/9.6.10/firebase-app-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.6.10/firebase-firestore-compat.js"></script>
+
+  <!-- Firebase Config & Logic -->
+  <script src="firebase-config.js"></script>
+  <script src="admin.js"></script>
+</body>
+</html>

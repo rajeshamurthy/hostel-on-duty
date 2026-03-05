@@ -1,0 +1,239 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Login - Hostel On-Duty Booking</title>
+  <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&family=Orbitron:wght@700&display=swap" rel="stylesheet">
+  <style>
+    * {
+      box-sizing: border-box;
+    }
+
+    body, html {
+      margin: 0;
+      padding: 0;
+      height: 100%;
+      font-family: 'Roboto', sans-serif;
+    }
+
+    body {
+      background: url('image.jpg') no-repeat center center fixed;
+      background-size: cover;
+    }
+
+    .overlay {
+      background-color: rgba(255, 255, 255, 0.85);
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      padding: 20px;
+      position: relative;
+    }
+
+    header {
+      display: flex;
+      align-items: center;
+      padding: 10px 20px;
+      background-color: #ffffffcc;
+      box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+      border-radius: 10px;
+      margin-bottom: 40px;
+      width: 100%;
+      max-width: 500px;
+    }
+
+    header img {
+      height: 80px;
+      margin-right: 15px;
+    }
+
+    header h2 {
+      margin: 0;
+      color: #2c3e50;
+    }
+
+    header p {
+      margin: 4px 0 0;
+      color: #555;
+    }
+
+    .login-container {
+      width: 100%;
+      max-width: 500px;
+      background-color: #ffffff;
+      padding: 40px;
+      border-radius: 10px;
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+    }
+
+    .login-container h2 {
+      text-align: center;
+      margin-bottom: 30px;
+      color: #2e86de;
+      font-size: 28px;
+    }
+
+    .login-container p {
+      text-align: center;
+      color: #666;
+      margin-bottom: 20px;
+    }
+
+    input {
+      width: 100%;
+      padding: 12px;
+      margin: 12px 0;
+      border: 1px solid #ddd;
+      border-radius: 6px;
+      font-size: 14px;
+      transition: border-color 0.3s;
+    }
+
+    input:focus {
+      outline: none;
+      border-color: #2e86de;
+      box-shadow: 0 0 5px rgba(46, 134, 222, 0.3);
+    }
+
+    button {
+      width: 100%;
+      padding: 12px;
+      margin-top: 20px;
+      background-color: #2e86de;
+      color: white;
+      border: none;
+      border-radius: 6px;
+      font-size: 16px;
+      font-weight: bold;
+      cursor: pointer;
+      transition: background 0.3s;
+    }
+
+    button:hover {
+      background-color: #1b4f72;
+    }
+
+    button:active {
+      transform: scale(0.98);
+    }
+
+    #message {
+      margin-top: 15px;
+      padding: 10px;
+      text-align: center;
+      border-radius: 6px;
+      display: none;
+    }
+
+    #message.error {
+      background-color: #ffe5e5;
+      color: #d32f2f;
+      display: block;
+    }
+
+    #message.success {
+      background-color: #e5ffe5;
+      color: #388e3c;
+      display: block;
+    }
+
+    .toggle-form {
+      text-align: center;
+      margin-top: 20px;
+      color: #666;
+    }
+
+    .toggle-form a {
+      color: #2e86de;
+      cursor: pointer;
+      text-decoration: none;
+      font-weight: bold;
+    }
+
+    .toggle-form a:hover {
+      text-decoration: underline;
+    }
+
+    .footer {
+      text-align: center;
+      padding: 15px 10px;
+      font-family: 'Roboto', sans-serif;
+      font-size: 12px;
+      color: #ffffff;
+      background-color: rgba(0, 0, 0, 0.7);
+      position: absolute;
+      bottom: 0;
+      width: 100%;
+    }
+
+    @media (max-width: 600px) {
+      header {
+        flex-direction: column;
+        text-align: center;
+      }
+
+      header img {
+        margin-right: 0;
+        margin-bottom: 10px;
+      }
+
+      .login-container {
+        padding: 25px;
+      }
+
+      .login-container h2 {
+        font-size: 22px;
+      }
+
+      .role-options label {
+        display: block;
+        margin: 10px 0;
+      }
+    }
+  </style>
+</head>
+<body>
+
+  <div class="overlay">
+    <header>
+      <img src="clg-logo.jpg" alt="Sri Eshwar Logo">
+      <div>
+        <h2>Sri Eshwar College of Engineering</h2>
+        <p>Autonomous Institution | Coimbatore, Tamil Nadu</p>
+      </div>
+    </header>
+
+    <div class="login-container">
+      <!-- Login Form -->
+      <h2>Login</h2>
+      <p>Apply Hostel On-Duty Booking</p>
+      <form id="loginForm" onsubmit="handleLogin(event)">
+        <input type="email" id="loginEmail" placeholder="Username@sece.ac.in or Email" required />
+        <input type="password" id="loginPassword" placeholder="Password" required />
+        <button type="submit">Sign In</button>
+      </form>
+      <div id="message"></div>
+      <p class="toggle-form">
+        Don't have an account? <a href="signup.html">Sign Up</a>
+      </p>
+    </div>
+
+    <footer class="footer">
+      Powered by <strong>Dept. of ECE</strong>, 2025
+    </footer>
+  </div>
+
+  <!-- Firebase SDKs -->
+  <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-app-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-firestore-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-auth-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-analytics-compat.js"></script>
+
+  <!-- Firebase Config -->
+  <script src="firebase-config.js"></script>
+  <script src="login.js"></script>
+
+</body>
+</html>
