@@ -1,16 +1,19 @@
-// firebase-config.js
-
+// Your web app's Firebase configuration
+// For Firebase JS SDK v7.20.0 and later, measurementId is optional
 const firebaseConfig = {
-  apiKey: "AIzaSyAryJzJGE30yJvDp_uc8KnrECz_2sdwUAA",
-  authDomain: "hostel-on-duty.firebaseapp.com",
-  projectId: "hostel-on-duty",
-  storageBucket: "hostel-on-duty.firebasestorage.app",
-  messagingSenderId: "985978177553",
-  appId: "1:985978177553:web:e942568fb35e7ce03e49b0",
-  measurementId: "G-EYNQ87SFJ6"
+  apiKey: "AIzaSyAKNq9EN36hd_eKp3zQm4ERe4uCXu43dxU",
+  authDomain: "hostel-on-duty-6f2af.firebaseapp.com",
+  projectId: "hostel-on-duty-6f2af",
+  storageBucket: "hostel-on-duty-6f2af.firebasestorage.app",
+  messagingSenderId: "557682564404",
+  appId: "1:557682564404:web:c302d19f9765873f98d961",
+  measurementId: "G-W70NMPZNVB"
 };
 
-
+// Initialize Firebase
 firebase.initializeApp(firebaseConfig);
-const db = firebase.firestore();
+
+// Initialize Firebase services
 const auth = firebase.auth();
+const db = firebase.firestore();
+const analytics = firebase.analytics();

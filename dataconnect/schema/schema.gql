@@ -1,0 +1,36 @@
+type User @table {
+  displayName: String!
+  email: String!
+  role: String!
+  photoUrl: String
+}
+
+type RoomType @table {
+  name: String!
+  capacity: Int!
+  description: String
+}
+
+type Room @table {
+  roomNumber: String!
+  roomType: RoomType!
+  notes: String
+}
+
+type Booking @table {
+  guest: User!
+  room: Room!
+  checkInDate: Date!
+  checkOutDate: Date!
+  status: String!
+  notes: String
+}
+
+type CleaningTask @table {
+  room: Room!
+  assignedToStaff: User
+  assignedDate: Date!
+  status: String!
+  notes: String
+  completedDate: Date
+}

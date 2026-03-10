@@ -1,24 +1,279 @@
 <!DOCTYPE html>
 <html>
 <head>
-  <title>Admin Panel - Sim Lab</title>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Admin Dashboard - Hostel On-Duty</title>
+  <link rel="stylesheet" href="style.css" />
+  <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&display=swap" rel="stylesheet">
+  <style>
+    .admin-header {
+      background: linear-gradient(90deg, rgba(255, 0, 127, 0.1) 0%, rgba(255, 100, 0, 0.1) 100%);
+      border-left: 4px solid #ff007f;
+      padding: 15px;
+      margin-bottom: 20px;
+      border-radius: 8px;
+      color: #ffcc00;
+    }
+
+    .admin-stats {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+      gap: 15px;
+      margin-bottom: 30px;
+    }
+
+    .admin-stat-card {
+      background: linear-gradient(135deg, rgba(255, 100, 0, 0.15) 0%, rgba(255, 0, 127, 0.15) 100%);
+      border: 2px solid rgba(255, 100, 0, 0.4);
+      border-radius: 12px;
+      padding: 20px;
+      text-align: center;
+      transition: all 0.3s ease;
+    }
+
+    .admin-stat-card:hover {
+      border-color: #ff007f;
+      box-shadow: 0 8px 25px rgba(255, 0, 127, 0.2);
+      transform: translateY(-3px);
+    }
+
+    .admin-stat-card h4 {
+      color: #ffaa44;
+      font-size: 0.9em;
+      margin-bottom: 10px;
+      text-transform: uppercase;
+    }
+
+    .admin-stat-card .number {
+      font-size: 2em;
+      color: #ff007f;
+      font-weight: bold;
+    }
+
+    .admin-controls {
+      background: rgba(40, 40, 70, 0.8);
+      border: 2px solid rgba(255, 100, 0, 0.3);
+      padding: 20px;
+      border-radius: 12px;
+      margin-bottom: 30px;
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+      gap: 15px;
+    }
+
+    .admin-btn {
+      background: linear-gradient(90deg, #ff007f 0%, #ff6600 100%);
+      color: white;
+      border: none;
+      padding: 12px;
+      border-radius: 8px;
+      font-weight: bold;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      text-transform: uppercase;
+      font-size: 0.9em;
+    }
+
+    .admin-btn:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 6px 20px rgba(255, 0, 127, 0.4);
+    }
+
+    .table-wrapper {
+      overflow-x: auto;
+      border-radius: 12px;
+      background: rgba(30, 30, 60, 0.6);
+      border: 1px solid rgba(255, 100, 0, 0.2);
+    }
+
+    .admin-app-card {
+      background: rgba(40, 40, 70, 0.8);
+      border-left: 4px solid #ff007f;
+      padding: 20px;
+      margin: 15px 0;
+      border-radius: 8px;
+      transition: all 0.3s ease;
+    }
+
+    .admin-app-card:hover {
+      background: rgba(50, 50, 80, 0.95);
+      box-shadow: 0 4px 15px rgba(255, 0, 127, 0.2);
+    }
+
+    .admin-app-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: 10px;
+      margin-bottom: 15px;
+    }
+
+    .admin-app-header h4 {
+      color: #ff007f;
+      margin: 0;
+    }
+
+    .admin-app-info {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+      gap: 15px;
+      margin: 15px 0;
+    }
+
+    .info-block {
+      background: rgba(30, 30, 60, 0.8);
+      padding: 12px;
+      border-radius: 6px;
+      border-left: 3px solid #ff007f;
+    }
+
+    .info-block label {
+      color: #ffaa44;
+      font-weight: bold;
+      font-size: 0.85em;
+      display: block;
+    }
+
+    .info-block value {
+      color: #e0e0e0;
+      display: block;
+      margin-top: 5px;
+    }
+
+    .admin-actions {
+      display: flex;
+      gap: 10px;
+      margin-top: 15px;
+      flex-wrap: wrap;
+    }
+
+    .admin-action-btn {
+      flex: 1;
+      min-width: 100px;
+      padding: 10px;
+      border: none;
+      border-radius: 6px;
+      font-weight: bold;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      font-size: 0.9em;
+    }
+
+    .view-btn {
+      background: rgba(0, 212, 255, 0.3);
+      border: 2px solid #00d4ff;
+      color: #00d4ff;
+    }
+
+    .view-btn:hover {
+      background: #00d4ff;
+      color: #1a1a2e;
+    }
+
+    .delete-btn {
+      background: linear-gradient(90deg, #ff6666 0%, #cc0000 100%);
+      color: white;
+    }
+
+    .delete-btn:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 4px 15px rgba(255, 68, 68, 0.3);
+    }
+
+    .export-btn {
+      background: linear-gradient(90deg, #ffaa00 0%, #ff6600 100%);
+      color: white;
+    }
+
+    .export-btn:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 4px 15px rgba(255, 170, 0, 0.3);
+    }
+
+    .student-list {
+      background: rgba(40, 40, 70, 0.8);
+      border: 1px solid rgba(255, 100, 0, 0.2);
+      border-radius: 12px;
+      padding: 20px;
+      margin-top: 30px;
+    }
+
+    .student-item {
+      background: rgba(30, 30, 60, 0.8);
+      padding: 15px;
+      margin: 10px 0;
+      border-radius: 8px;
+      border-left: 3px solid #ff007f;
+      color: #e0e0e0;
+    }
+  </style>
 </head>
 <body>
-  <header style="display: flex; align-items: center; padding: 10px; background-color: #f2f2f2;">
-    <img src="clg-logo.jpg" alt="Sri Eshwar Logo" style="height: 80px; margin-right: 15px;">
+  <header>
+    <img src="clg-logo.jpg" alt="Sri Eshwar Logo">
     <div>
       <h2>Sri Eshwar College of Engineering</h2>
-      <p>Autonomous Institution | Coimbatore, Tamil Nadu</p>
+      <p>Admin Dashboard - System Administration</p>
     </div>
   </header>
-  <hr>
 
-  <h2>All On-Duty Applications (Admin View)</h2>
-  <ul id="adminApplicationList"></ul>
+  <div class="container">
+    <div class="admin-header">
+      <h2 style="margin: 0; color: #ff007f;">🔐 ADMINISTRATOR PANEL</h2>
+      <p style="margin: 5px 0; color: #ffcc00;">Full system access and management control</p>
+    </div>
 
-  <!-- Firebase SDK -->
-  <script src="https://www.gstatic.com/firebasejs/9.6.10/firebase-app-compat.js"></script>
-  <script src="https://www.gstatic.com/firebasejs/9.6.10/firebase-firestore-compat.js"></script>
+    <!-- Admin Statistics -->
+    <h2 style="color: #ff007f; margin-bottom: 20px;">System Statistics</h2>
+    <div class="admin-stats">
+      <div class="admin-stat-card">
+        <h4>👥 Total Students</h4>
+        <div class="number" id="totalStudents">0</div>
+      </div>
+      <div class="admin-stat-card">
+        <h4>📝 Total Applications</h4>
+        <div class="number" id="totalApplications">0</div>
+      </div>
+      <div class="admin-stat-card">
+        <h4>👨‍🏫 Faculty Members</h4>
+        <div class="number" id="totalFaculty">0</div>
+      </div>
+      <div class="admin-stat-card">
+        <h4>✅ Approval Rate</h4>
+        <div class="number" id="approvalRate">0%</div>
+      </div>
+    </div>
+
+    <!-- Admin Controls -->
+    <h2 style="color: #ff007f; margin: 30px 0 20px;">System Controls</h2>
+    <div class="admin-controls">
+      <a href="create-admin.html" class="admin-btn" style="text-decoration: none; text-align: center; display: flex; align-items: center; justify-content: center;">👤 Create Admin</a>
+      <a href="create-faculty.html" class="admin-btn" style="text-decoration: none; text-align: center; display: flex; align-items: center; justify-content: center;">👨‍🏫 Create Faculty</a>
+      <button class="admin-btn" onclick="exportReport()">📊 Export Report</button>
+      <button class="admin-btn" onclick="generateStats()">📈 Generate Stats</button>
+      <button class="admin-btn" onclick="sendNotification()">📢 Send Notification</button>
+      <button class="admin-btn" onclick="backupDatabase()">💾 Backup Database</button>
+      <button class="admin-btn" onclick="adminLogout()" style="background: linear-gradient(90deg, #666, #444);">🚪 Logout</button>
+    </div>
+
+    <!-- Applications List -->
+    <h2>All Applications <span style="font-size: 0.8em; color: #888899;" id="appCount">(0)</span></h2>
+    <div id="adminApplicationList">
+      <div style="text-align: center; padding: 40px; color: #888899;">
+        <p>Loading all applications...</p>
+      </div>
+    </div>
+
+    <!-- Message Display -->
+    <div id="message"></div>
+  </div>
+
+  <!-- Firebase SDKs -->
+  <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-app-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-firestore-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-auth-compat.js"></script>
 
   <!-- Firebase Config & Logic -->
   <script src="firebase-config.js"></script>

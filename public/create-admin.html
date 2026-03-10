@@ -1,0 +1,132 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Create Admin Account - Setup</title>
+  <link rel="stylesheet" href="style.css">
+  <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&display=swap" rel="stylesheet">
+  <style>
+    .setup-card {
+      max-width: 480px;
+      margin: 30px auto;
+      background: linear-gradient(135deg, rgba(255, 0, 127, 0.15), rgba(255, 100, 0, 0.15));
+      border: 2px solid rgba(255, 0, 127, 0.4);
+      border-radius: 16px;
+      padding: 28px;
+      box-shadow: 0 18px 55px rgba(0, 0, 0, 0.5);
+    }
+    .setup-card h2 { color: #ff007f; margin: 0 0 10px; }
+    .setup-card label { display: block; color: #ffaa44; margin-bottom: 6px; font-weight: 500; }
+    .setup-card input { width: 100%; padding: 10px 12px; margin-bottom: 14px; border-radius: 8px; border: 1px solid rgba(255, 0, 127, 0.4); background: rgba(10, 16, 35, 0.9); color: #e0e0e0; }
+    .setup-card button { width: 100%; padding: 12px; background: linear-gradient(90deg, #ff007f, #ff6600); color: white; border: none; border-radius: 8px; font-weight: bold; cursor: pointer; margin-top: 10px; }
+    .setup-card button:hover { opacity: 0.9; }
+    .username-row { display: flex; gap: 0; }
+    .username-row input { flex: 1; border-radius: 8px 0 0 8px; }
+    .username-row .suffix { background: rgba(20, 25, 50, 0.9); border: 1px solid rgba(255, 0, 127, 0.4); border-left: none; padding: 10px 12px; color: #ffaa44; border-radius: 0 8px 8px 0; display: flex; align-items: center; }
+    #message { margin-top: 12px; padding: 10px; border-radius: 8px; display: none; }
+    #message.error { background: rgba(255,80,80,0.2); color: #ff8080; display: block; }
+    #message.success { background: rgba(80,255,80,0.2); color: #6dff9a; display: block; }
+    .instructions { background: rgba(0,0,0,0.3); padding: 15px; border-radius: 8px; margin-bottom: 20px; font-size: 0.9rem; color: #b0b0ff; }
+    .instructions strong { color: #ff007f; }
+  </style>
+</head>
+<body>
+  <header>
+    <img src="clg-logo.jpg" alt="Sri Eshwar Logo">
+    <div>
+      <h2>Sri Eshwar College of Engineering</h2>
+      <p>Create First Admin Account</p>
+    </div>
+  </header>
+
+  <div class="container">
+    <div class="setup-card">
+      <h2>Setup Admin Account</h2>
+      <div class="instructions">
+        <strong>One-time setup:</strong> Use this page to create your first admin account. After creation, you will be signed out. Log in again with role <strong>Admin</strong> to access the admin dashboard. Keep this page private.
+      </div>
+
+      <form id="createAdminForm" onsubmit="handleCreateAdmin(event)">
+        <label for="adminName">Full Name</label>
+        <input type="text" id="adminName" placeholder="e.g., Admin User" required>
+
+        <label for="adminUsername">Username (institutional email)</label>
+        <div class="username-row">
+          <input type="text" id="adminUsername" placeholder="e.g., admin" required>
+          <span class="suffix">@sece.ac.in</span>
+        </div>
+
+        <label for="adminPassword">Password (min 6 characters)</label>
+        <input type="password" id="adminPassword" placeholder="Set a secure password" required minlength="6">
+
+        <button type="submit">Create Admin Account</button>
+      </form>
+      <div id="message"></div>
+    </div>
+  </div>
+
+  <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-app-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-firestore-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-auth-compat.js"></script>
+  <script src="firebase-config.js"></script>
+  <script>
+    function showMsg(msg, isError) {
+      const el = document.getElementById("message");
+      el.textContent = msg;
+      el.className = isError ? "error" : "success";
+    }
+
+    function handleCreateAdmin(e) {
+      e.preventDefault();
+      const name = document.getElementById("adminName").value.trim();
+      const username = document.getElementById("adminUsername").value.trim();
+      const password = document.getElementById("adminPassword").value;
+
+      if (!name || !username || !password) {
+        showMsg("All fields are required.", true);
+        return;
+      }
+      if (username.includes("@")) {
+        showMsg("Username should not contain @. Use only the part before @sece.ac.in", true);
+        return;
+      }
+      if (password.length < 6) {
+        showMsg("Password must be at least 6 characters.", true);
+        return;
+      }
+
+      const email = username + "@sece.ac.in";
+      showMsg("Creating admin account... You will be signed out.", false);
+
+      auth.signOut().then(() => {
+        return auth.createUserWithEmailAndPassword(email, password);
+      })
+      .then(userCredential => {
+        const user = userCredential.user;
+        return db.collection("users").doc(user.uid).set({
+          name,
+          username,
+          institutionalEmail: email,
+          role: "admin",
+          createdAt: new Date(),
+          status: "active",
+          createdBy: "setup"
+        }).then(() => user);
+      })
+      .then(() => auth.signOut())
+      .then(() => {
+        showMsg("Admin account created! Log in at login.html with role 'Admin'. Redirecting...", false);
+        setTimeout(() => { window.location.href = "login.html"; }, 2500);
+      })
+      .catch(err => {
+        console.error(err);
+        let msg = "Failed to create admin account.";
+        if (err.code === "auth/email-already-in-use") msg = "This email is already registered. Use a different username.";
+        else if (err.code === "auth/weak-password") msg = "Password is too weak.";
+        showMsg(msg, true);
+      });
+    }
+  </script>
+</body>
+</html>

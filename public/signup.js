@@ -10,7 +10,9 @@ function showMessage(message, isError = false) {
 function handleSignup(event) {
   event.preventDefault();
 
+  console.log("🔍 Reading form data...");
   const name = document.getElementById("name").value.trim();
+  const rollNumber = document.getElementById("rollNumber").value.trim();
   const username = document.getElementById("username").value.trim();
   const email = document.getElementById("email").value.trim();
   const phone = document.getElementById("phone").value.trim();
@@ -22,8 +24,26 @@ function handleSignup(event) {
   const parentName = document.getElementById("parentName").value.trim();
   const parentPhone = document.getElementById("parentPhone").value.trim();
 
+  console.log("📝 Raw form values:");
+  console.log("- name element:", document.getElementById("name"));
+  console.log("- name value:", document.getElementById("name").value);
+  console.log("- rollNumber element:", document.getElementById("rollNumber"));
+  console.log("- rollNumber value:", document.getElementById("rollNumber").value);
+  console.log("- year element:", document.getElementById("year"));
+  console.log("- year value:", document.getElementById("year").value);
+
   // Validation
-  if (!name || !username || !email || !phone || !password || !year || !department || !section || !parentRelation || !parentName || !parentPhone) {
+  if (!name || !rollNumber || !username || !email || !phone || !password || !year || !department || !section || !parentRelation || !parentName || !parentPhone) {
+    console.log("Validation failed. Missing fields:");
+    console.log("- name:", !!name);
+    console.log("- rollNumber:", !!rollNumber, rollNumber);
+    console.log("- username:", !!username, username);
+    console.log("- email:", !!email, email);
+    console.log("- phone:", !!phone, phone);
+    console.log("- password:", !!password);
+    console.log("- year:", !!year, year);
+    console.log("- department:", !!department, department);
+    console.log("- section:", !!section, section);
     showMessage("Please fill in all fields.", true);
     return;
   }
@@ -71,6 +91,13 @@ function handleSignup(event) {
   }
 
   console.log("📝 Starting signup process...");
+  console.log("Form data collected:");
+  console.log("- Name:", name);
+  console.log("- Roll Number:", rollNumber);
+  console.log("- Username:", username);
+  console.log("- Year:", year);
+  console.log("- Department:", department);
+  console.log("- Section:", section);
 
   // Create user account with institutional email
   auth.createUserWithEmailAndPassword(institutionalEmail, password)
@@ -78,14 +105,22 @@ function handleSignup(event) {
       const user = userCredential.user;
       console.log("✅ User created:", user.email);
 
-      // Store user profile in Firestore
-      db.collection("users").doc(user.uid).set({
+      // Prepare user profile data
+      const userProfile = {
         name: name,
+        rollNumber: rollNumber,
+        regNo: rollNumber,
         username: username,
         institutionalEmail: institutionalEmail,
         personalEmail: email,
         phone: phone,
         year: year,
+        semester: (() => {
+          const yearMap = { 'I': '1st Year', 'II': '2nd Year', 'III': '3rd Year', 'IV': '4th Year' };
+          const calculatedSemester = yearMap[year] || year + ' Year';
+          console.log("Calculated semester:", calculatedSemester, "from year:", year);
+          return calculatedSemester;
+        })(),
         department: department,
         section: section,
         parentRelation: parentRelation,
@@ -93,31 +128,112 @@ function handleSignup(event) {
         parentPhone: parentPhone,
         createdAt: new Date(),
         status: "active"
-      })
-      .then(() => {
-        console.log("📚 User profile saved to Firestore");
-        showMessage("Account created successfully! Redirecting to login...", false);
-        
-        // Sign out the user so they can login with their credentials
-        auth.signOut()
-          .then(() => {
-            // Redirect to login page after 2 seconds
-            setTimeout(() => {
-              window.location.href = "login.html";
-            }, 2000);
-          })
-          .catch(error => {
-            console.error("Error signing out:", error);
-            window.location.href = "login.html";
-          });
-      })
-      .catch(error => {
-        console.error("🚨 Error saving user profile:", error);
-        showMessage("Error saving user information. Please try again.", true);
-      });
+      };
+
+      // Validate that critical fields are not empty
+      console.log("🔍 Validating userProfile fields:");
+      console.log("- name:", userProfile.name, "length:", userProfile.name?.length);
+      console.log("- rollNumber:", userProfile.rollNumber, "length:", userProfile.rollNumber?.length);
+      console.log("- year:", userProfile.year, "length:", userProfile.year?.length);
+      console.log("- semester:", userProfile.semester, "length:", userProfile.semester?.length);
+
+      if (!userProfile.rollNumber || userProfile.rollNumber.trim() === '') {
+        console.error("❌ rollNumber is empty or undefined!");
+        showMessage("Roll number is required. Please fill in all fields.", true);
+        return;
+      }
+
+      console.log("📋 User profile data to save:", userProfile);
+      console.log("📋 userProfile.rollNumber:", userProfile.rollNumber);
+      console.log("📋 userProfile.semester:", userProfile.semester);
+      console.log("📋 userProfile.year:", userProfile.year);
+
+      // Store user profile in Firestore
+      console.log("🔄 Calling Firestore set operation...");
+      
+      // First save basic fields
+      const basicProfile = {
+        name: userProfile.name,
+        username: userProfile.username,
+        institutionalEmail: userProfile.institutionalEmail,
+        personalEmail: userProfile.personalEmail,
+        createdAt: userProfile.createdAt,
+        status: userProfile.status
+      };
+      
+      return db.collection("users").doc(user.uid).set(basicProfile)
+        .then(() => {
+          console.log("📚 Basic profile saved, now saving extended fields...");
+          
+          // Then update with extended fields
+          const extendedFields = {
+            rollNumber: userProfile.rollNumber,
+            regNo: userProfile.regNo,
+            phone: userProfile.phone,
+            year: userProfile.year,
+            semester: userProfile.semester,
+            department: userProfile.department,
+            section: userProfile.section,
+            parentRelation: userProfile.parentRelation,
+            parentName: userProfile.parentName,
+            parentPhone: userProfile.parentPhone
+          };
+          
+          console.log("📋 Extended fields to save:", extendedFields);
+          
+          return db.collection("users").doc(user.uid).update(extendedFields)
+            .then(() => {
+              console.log("📚 Extended fields saved successfully");
+            })
+            .catch(updateError => {
+              console.error("❌ Failed to save extended fields:", updateError);
+              console.error("Update error code:", updateError.code);
+              console.error("Update error message:", updateError.message);
+              // Continue anyway - basic profile is saved
+            });
+        })
+        .then(() => {
+          console.log("📚 User profile saved to Firestore successfully");
+          
+          // Verify the data was saved by reading it back
+          return db.collection("users").doc(user.uid).get()
+            .then(doc => {
+              if (doc.exists) {
+                const savedData = doc.data();
+                console.log("✅ Verification: Data saved successfully:", savedData);
+                console.log("Roll Number saved:", savedData.rollNumber);
+                console.log("Semester saved:", savedData.semester);
+                console.log("Year saved:", savedData.year);
+                
+                // Check if critical fields are missing
+                if (!savedData.rollNumber) {
+                  console.error("❌ CRITICAL: rollNumber not saved!");
+                }
+                if (!savedData.semester) {
+                  console.error("❌ CRITICAL: semester not saved!");
+                }
+              } else {
+                console.error("❌ Verification failed: Document not found after save");
+              }
+              return user;
+            });
+        })
+    })
+    .then(user => {
+      console.log("✅ Complete signup successful for user:", user.email);
+      showMessage("Account created successfully! Redirecting to login...", false);
+      
+      // Sign out the user so they can login with their credentials
+      return auth.signOut();
+    })
+    .then(() => {
+      // Redirect to login page after 2 seconds
+      setTimeout(() => {
+        window.location.href = "login.html";
+      }, 2000);
     })
     .catch(error => {
-      console.error("🚨 Signup error:", error.message);
+      console.error("🚨 Signup error:", error);
       let errorMessage = "Signup failed. Please try again.";
       
       if (error.code === "auth/email-already-in-use") {
@@ -126,19 +242,12 @@ function handleSignup(event) {
         errorMessage = "Password is too weak. Please use a stronger password.";
       } else if (error.code === "auth/invalid-email") {
         errorMessage = "Invalid email format.";
+      } else if (error.code === "permission-denied") {
+        errorMessage = "Permission denied. Please check Firestore security rules.";
       }
       
       showMessage(errorMessage, true);
     });
 }
 
-// Check if user is already logged in
-window.addEventListener("load", function() {
-  auth.onAuthStateChanged(user => {
-    if (user) {
-      // User is logged in, redirect to index.html
-      console.log("✅ User already logged in, redirecting...");
-      window.location.href = "index.html";
-    }
-  });
-});
+

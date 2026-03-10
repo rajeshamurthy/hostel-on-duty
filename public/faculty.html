@@ -1,35 +1,287 @@
 <!DOCTYPE html>
 <html>
 <head>
-  <title>Faculty Dashboard - Sim Lab</title>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Faculty Dashboard - Hostel On-Duty</title>
   <link rel="stylesheet" href="style.css" />
+  <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&display=swap" rel="stylesheet">
+  <style>
+    .filter-section {
+      background: rgba(40, 40, 70, 0.8);
+      border: 1px solid rgba(0, 212, 255, 0.2);
+      padding: 20px;
+      border-radius: 12px;
+      margin-bottom: 30px;
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+      gap: 15px;
+    }
+
+    .filter-section label {
+      display: block;
+      color: #b0b0ff;
+      font-size: 0.9em;
+      margin-bottom: 5px;
+      font-weight: 500;
+    }
+
+    .filter-section select {
+      width: 100%;
+      background: rgba(50, 50, 80, 0.8);
+      border: 2px solid rgba(0, 212, 255, 0.3);
+      color: #e0e0e0;
+      padding: 10px;
+      border-radius: 6px;
+    }
+
+    .app-card {
+      background: linear-gradient(135deg, rgba(0, 212, 255, 0.1) 0%, rgba(100, 50, 200, 0.1) 100%);
+      border: 2px solid rgba(0, 212, 255, 0.3);
+      border-radius: 12px;
+      padding: 25px;
+      margin: 20px 0;
+      transition: all 0.3s ease;
+      backdrop-filter: blur(5px);
+    }
+
+    .app-card:hover {
+      border-color: #00d4ff;
+      box-shadow: 0 8px 25px rgba(0, 212, 255, 0.2);
+      transform: translateY(-3px);
+      background: linear-gradient(135deg, rgba(0, 212, 255, 0.15) 0%, rgba(100, 50, 200, 0.15) 100%);
+    }
+
+    .app-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 15px;
+      flex-wrap: wrap;
+      gap: 10px;
+    }
+
+    .app-header h3 {
+      color: #00d4ff;
+      margin: 0;
+    }
+
+    .app-details {
+      background: rgba(30, 30, 60, 0.8);
+      border-left: 4px solid #00d4ff;
+      padding: 15px;
+      border-radius: 6px;
+      margin: 15px 0;
+    }
+
+    .app-details p {
+      margin: 8px 0;
+      color: #c0c0d0;
+      font-size: 0.95em;
+    }
+
+    .app-details strong {
+      color: #00d4ff;
+    }
+
+    .action-buttons {
+      display: flex;
+      gap: 10px;
+      margin-top: 15px;
+      flex-wrap: wrap;
+    }
+
+    .approve-btn, .reject-btn {
+      flex: 1;
+      min-width: 120px;
+      padding: 10px;
+      border: none;
+      border-radius: 6px;
+      font-weight: bold;
+      cursor: pointer;
+      transition: all 0.3s ease;
+    }
+
+    .approve-btn {
+      background: linear-gradient(90deg, #44ff44 0%, #00cc00 100%);
+      color: #1a1a2e;
+    }
+
+    .approve-btn:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 4px 15px rgba(68, 255, 68, 0.3);
+    }
+
+    .reject-btn {
+      background: linear-gradient(90deg, #ff6666 0%, #cc0000 100%);
+      color: white;
+    }
+
+    .reject-btn:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 4px 15px rgba(255, 68, 68, 0.3);
+    }
+
+    .stats-overview {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+      gap: 15px;
+      margin-bottom: 30px;
+    }
+
+    .stat-box {
+      background: rgba(40, 40, 70, 0.8);
+      border-left: 4px solid #00d4ff;
+      padding: 20px;
+      border-radius: 8px;
+      text-align: center;
+    }
+
+    .stat-box h4 {
+      color: #b0b0ff;
+      font-size: 0.9em;
+      margin-bottom: 10px;
+      text-transform: uppercase;
+    }
+
+    .stat-box .number {
+      font-size: 2em;
+      color: #00d4ff;
+      font-weight: bold;
+    }
+
+    .no-applications {
+      text-align: center;
+      padding: 40px;
+      color: #888899;
+    }
+
+    .logout-btn {
+      background: rgba(255, 100, 0, 0.3);
+      border: 2px solid #ff6600;
+      color: #ffaa44;
+      padding: 8px 16px;
+      border-radius: 8px;
+      font-weight: bold;
+      cursor: pointer;
+      transition: all 0.3s ease;
+    }
+    .logout-btn:hover { background: #ff6600; color: white; }
+  </style>
 </head>
 <body>
-  <header style="display: flex; align-items: center; padding: 10px; background-color: #f2f2f2;">
-    <img src="clg-logo.jpg" alt="Sri Eshwar Logo" style="height: 80px; margin-right: 15px;">
-    <div>
-      <h2>Sri Eshwar College of Engineering</h2>
-      <p>Autonomous Institution | Coimbatore, Tamil Nadu</p>
+  <header style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap;">
+    <div style="display: flex; align-items: center;">
+      <img src="clg-logo.jpg" alt="Sri Eshwar Logo">
+      <div>
+        <h2>Sri Eshwar College of Engineering</h2>
+        <p>Faculty Dashboard - On-Duty Portal</p>
+      </div>
     </div>
+    <button class="logout-btn" onclick="facultyLogout()">🚪 Logout</button>
   </header>
-  <hr>
 
   <div class="container">
-    <h2>On-Duty Applications</h2>
-    <div id="applicationList">Loading...</div>
+    <h2>On-Duty Applications Review</h2>
+
+    <!-- Stats Overview -->
+    <div class="stats-overview">
+      <div class="stat-box">
+        <h4>📨 Pending</h4>
+        <div class="number" id="pendingCount">0</div>
+      </div>
+      <div class="stat-box">
+        <h4>✅ Approved</h4>
+        <div class="number" id="approvedCount">0</div>
+      </div>
+      <div class="stat-box">
+        <h4>❌ Rejected</h4>
+        <div class="number" id="rejectedCount">0</div>
+      </div>
+      <div class="stat-box">
+        <h4>📑 Total</h4>
+        <div class="number" id="totalCount">0</div>
+      </div>
+    </div>
+
+    <!-- Filter Section -->
+    <div class="filter-section">
+      <div>
+        <label>Filter by Status</label>
+        <select id="statusFilter" onchange="filterApplications()">
+          <option value="">All Applications</option>
+          <option value="pending">Pending</option>
+          <option value="approved">Approved</option>
+          <option value="rejected">Rejected</option>
+        </select>
+      </div>
+      <div>
+        <label>Filter by Department</label>
+        <select id="deptFilter" onchange="filterApplications()">
+          <option value="">All Departments</option>
+          <option value="ECE">ECE</option>
+          <option value="CSE">CSE</option>
+          <option value="EEE">EEE</option>
+          <option value="MECH">MECH</option>
+          <option value="CSE-Cybersecurity">CSE (Cybersecurity)</option>
+          <option value="AIDS">AIDS</option>
+          <option value="CSE-AIML">CSE (AIML)</option>
+          <option value="IT">IT</option>
+          <option value="CSBS">CSBS</option>
+        </select>
+      </div>
+      <div>
+        <label>Filter by Year</label>
+        <select id="semFilter" onchange="filterApplications()">
+          <option value="">All Years</option>
+          <option value="I">I Year</option>
+          <option value="II">II Year</option>
+          <option value="III">III Year</option>
+          <option value="IV">IV Year</option>
+        </select>
+      </div>
+    </div>
+
+    <!-- Applications List -->
+    <div id="applicationList">
+      <div class="no-applications">
+        <p>Loading applications...</p>
+      </div>
+    </div>
+
+    <!-- Message Display -->
+    <div id="message"></div>
   </div>
 
-  <!-- Firebase SDK -->
-
-  <!-- Firebase SDKs (Compat Version) -->
-<script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-app-compat.js"></script>
-<script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-firestore-compat.js"></script>
-<script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-auth-compat.js"></script>
-<script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-analytics-compat.js"></script>
-
+  <!-- Firebase SDKs -->
+  <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-app-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-firestore-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-auth-compat.js"></script>
 
   <!-- Firebase Config & Logic -->
   <script src="firebase-config.js"></script>
   <script src="faculty.js"></script>
+  <script>
+    auth.onAuthStateChanged(user => {
+      if (!user) {
+        window.location.href = "login.html";
+      } else {
+        db.collection("users").doc(user.uid).get().then(doc => {
+          if (!doc.exists || (doc.data().role || "").toLowerCase() !== "faculty") {
+            console.warn("Access denied. Faculty role required.");
+            auth.signOut().then(() => { window.location.href = "login.html"; });
+          }
+        }).catch(() => { window.location.href = "login.html"; });
+      }
+    });
+    function facultyLogout() {
+      if (confirm("Are you sure you want to logout?")) {
+        auth.signOut().then(() => {
+          try { localStorage.removeItem("userRole"); } catch (e) {}
+          window.location.href = "login.html";
+        }).catch(err => { console.error(err); alert("Logout failed."); });
+      }
+    }
+  </script>
 </body>
 </html>

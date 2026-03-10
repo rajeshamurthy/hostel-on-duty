@@ -1,0 +1,52 @@
+mutation CreateDemoData @transaction @auth(level: USER, insecureReason: "This operation is for seeding data and should only be run by authenticated users.") {
+  user_insertMany(data: [
+    {
+      id: "user-1",
+      name: "Alice Smith",
+      email: "alice.smith@example.com",
+      checkIn: "2024-07-20T14:00:00Z",
+      checkOut: "2024-07-25T11:00:00Z",
+      roomNumber: "101"
+    },
+    {
+      id: "user-2",
+      name: "Bob Johnson",
+      email: "bob.johnson@example.com",
+      checkIn: "2024-07-22T15:00:00Z",
+      checkOut: "2024-07-28T10:00:00Z",
+      roomNumber: "205"
+    }
+  ])
+  staff_insertMany(data: [
+    {
+      id: "staff-1",
+      name: "Charlie Brown",
+      email: "charlie.brown@example.com",
+      role: "Manager",
+      shiftStart: "09:00",
+      shiftEnd: "17:00"
+    },
+    {
+      id: "staff-2",
+      name: "Diana Prince",
+      email: "diana.prince@example.com",
+      role: "Receptionist",
+      shiftStart: "08:00",
+      shiftEnd: "16:00"
+    }
+  ])
+  cleaningTask_insertMany(data: [
+    {
+      id: "task-1",
+      roomNumber: "101",
+      status: "PENDING",
+      assignedToStaffId: "staff-2"
+    },
+    {
+      id: "task-2",
+      roomNumber: "205",
+      status: "IN_PROGRESS",
+      assignedToStaffId: "staff-1"
+    }
+  ])
+}

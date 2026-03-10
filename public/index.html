@@ -1,339 +1,722 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
   <meta charset="UTF-8">
-  <title>Simulation Lab Resource Booking</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Student Dashboard - Hostel On-Duty</title>
   <link rel="stylesheet" href="style.css" />
-  <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&family=Orbitron:wght@700&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&display=swap" rel="stylesheet">
   <style>
-    * {
-      box-sizing: border-box;
+    .dashboard-wrapper {
+      display: grid;
+      grid-template-columns: 1fr 1.2fr;
+      gap: 30px;
+      margin-top: 30px;
     }
 
-    body, html {
-      margin: 0;
-      padding: 0;
-      height: 100%;
-      font-family: 'Roboto', sans-serif;
-    }
-
-    body {
-      background: url('image.jpg') no-repeat center center fixed;
-      background-size: cover;
-    }
-
-    .overlay {
-      background-color: rgba(255, 255, 255, 0.85);
-      min-height: 100vh;
+    .left-sidebar {
       display: flex;
       flex-direction: column;
-      align-items: flex-end;
-      padding: 20px;
-      position: relative;
+      gap: 25px;
     }
 
-    header {
+    .right-content {
       display: flex;
-      align-items: center;
-      padding: 10px 20px;
-      background-color: #ffffffcc;
-      box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
-      border-radius: 10px;
-      margin-bottom: 20px;
-      width: 100%;
+      flex-direction: column;
+      gap: 25px;
     }
 
-    header img {
-      height: 80px;
-      margin-right: 15px;
-    }
-
-    header h2 {
+    .profile-section {
+      display: flex;
+      flex-direction: column;
+      gap: 25px;
       margin: 0;
-      color: #2c3e50;
+      align-items: stretch;
     }
 
-    header p {
-      margin: 4px 0 0;
-      color: #555;
-    }
-
-    .container {
-      width: 100%;
-      max-width: 500px;
-      background-color: #ffffff;
-      padding: 25px;
-      border-radius: 10px;
-      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
-      margin-right: 40px;
-    }
-
-    .container h2 {
+    .profile-card {
+      background: linear-gradient(135deg, rgba(0, 212, 255, 0.15) 0%, rgba(100, 50, 200, 0.15) 100%);
+      border: 2px solid rgba(0, 212, 255, 0.4);
+      border-radius: 15px;
+      padding: 15px;
       text-align: center;
-      margin-bottom: 20px;
-      color: #2e86de;
-    }
-
-    input, button {
+      box-shadow: 0 8px 32px rgba(0, 0, 0, 0.2);
+      backdrop-filter: blur(10px);
       width: 100%;
-      padding: 12px;
-      margin: 8px 0;
-      border: 1px solid #ccc;
-      border-radius: 6px;
-      font-size: 14px;
+      margin-bottom: 15px;
     }
 
-    button {
-      background-color: #2e86de;
-      color: white;
-      border: none;
-      font-weight: bold;
-      cursor: pointer;
-      transition: background 0.3s;
-    }
-
-    button:hover {
-      background-color: #1b4f72;
-    }
-
-    #message {
-      margin-top: 15px;
-      text-align: center;
-      color: green;
-    }
-
-    .left-labels {
-  position: absolute;
-  top: 50%;
-  left: 0;
-  transform: translateY(-50%);
-  width: 50%;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  text-align: center;
-  font-family: sans-serif;
-  color: #2c3e50;
-}
-
-.left-labels h1 {
-  margin: 5px 0 0;
-  font-size: 22px;
-  font-weight: lighter;
-}
-
-.left-labels h2 {
-  margin: 10px 0 0;
-  font-size: 50px;
-  font-weight: bold;
-  color: #2e86de;
-}
-
-
-    @media (max-width: 700px) {
-      .overlay {
-        align-items: center;
-      }
-
-      .container {
-        margin-right: 0;
-        margin-left: 0;
-      }
-
-      .left-labels {
-        position: static;
-        margin-bottom: 20px;
-      }
-    }
-    .user-info {
-      position: absolute;
-      top: 20px;
-      right: 20px;
+    .profile-avatar {
+      width: 50px;
+      height: 50px;
+      border-radius: 50%;
+      background: linear-gradient(135deg, #00d4ff 0%, #6432c8 100%);
+      margin: 0 auto 10px;
       display: flex;
       align-items: center;
-      gap: 10px;
-      background-color: #2e86de;
+      justify-content: center;
+      font-size: 1.5em;
       color: white;
-      padding: 10px 15px;
-      border-radius: 6px;
-      font-size: 14px;
+      box-shadow: 0 4px 15px rgba(0, 212, 255, 0.4);
     }
 
-    .user-info button {
-      background-color: #d32f2f;
-      color: white;
-      border: none;
-      padding: 6px 12px;
-      border-radius: 4px;
-      cursor: pointer;
-      font-size: 12px;
-      font-weight: bold;
-      transition: background 0.3s;
+    .profile-card h3 {
+      color: #00d4ff;
+      font-size: 0.9em;
+      margin: 8px 0 6px;
     }
 
-    .user-info button:hover {
-      background-color: #b71c1c;
+    .profile-card p {
+      color: #b0b0ff;
+      font-size: 0.95em;
+      margin: 8px 0;
     }
 
-    .footer {
-  text-align: center;
-  padding: 15px 10px;
-  font-family: 'Roboto', sans-serif;
-  font-size: 14px;
-  color: #ffffff;
-  background-color: rgba(0, 0, 0, 0.7);
-  position: relative;
-  bottom: 0;
-  width: 100%;
-  margin-top: 40px;
-}
+    .profile-info {
+      text-align: left;
+      background: rgba(30, 30, 60, 0.8);
+      border: 1px solid rgba(0, 212, 255, 0.2);
+      border-radius: 12px;
+      padding: 12px;
+      margin-top: 8px;
+    }
 
-@media (max-width: 768px) {
-  .footer {
-    font-size: 12px;
-    padding: 10px;
-  }
-}
-
-    .tabs {
+    .info-row {
       display: flex;
-      margin-bottom: 20px;
+      justify-content: space-between;
+      margin: 4px 0;
+      padding: 3px 0;
+      border-bottom: 1px solid rgba(0, 212, 255, 0.1);
+      font-size: 0.8em;
     }
 
-    .tab-button {
-      background-color: #2e86de;
+    .info-row:last-child {
+      border-bottom: none;
+    }
+
+    .info-label {
+      color: #b0b0ff;
+      font-weight: 500;
+    }
+
+    .info-value {
+      color: #00d4ff;
+      font-weight: bold;
+    }
+
+    .od-status {
+      background: linear-gradient(90deg, rgba(0, 212, 255, 0.1) 0%, rgba(100, 50, 200, 0.1) 100%);
+      border-radius: 10px;
+      padding: 20px;
+      margin-top: 20px;
+    }
+
+    .quick-actions {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 8px;
+      margin-top: 12px;
+    }
+
+    .action-btn {
+      background: rgba(0, 212, 255, 0.2);
+      border: 2px solid #00d4ff;
+      color: #00d4ff;
+      padding: 8px;
+      border-radius: 8px;
+      cursor: pointer;
+      font-weight: bold;
+      transition: all 0.3s ease;
+      text-decoration: none;
+      text-align: center;
+      font-size: 0.8em;
+    }
+
+    .action-btn:hover {
+      background: linear-gradient(90deg, #00d4ff 0%, #0099cc 100%);
+      color: white;
+      transform: translateY(-3px);
+    }
+
+    .od-form-container {
+      background: linear-gradient(135deg, rgba(0, 212, 255, 0.1) 0%, rgba(100, 50, 200, 0.1) 100%);
+      border: 2px solid rgba(0, 212, 255, 0.3);
+      border-radius: 15px;
+      padding: 20px;
+      backdrop-filter: blur(5px);
+      max-width: 500px;
+      margin: 0 auto;
+    }
+
+    .od-form-container h2 {
+      color: #00d4ff;
+      margin-bottom: 20px;
+      text-align: center;
+      font-size: 1.3em;
+    }
+
+    .form-group {
+      margin-bottom: 15px;
+    }
+
+    .form-group label {
+      display: block;
+      color: #b0b0ff;
+      font-weight: 500;
+      margin-bottom: 8px;
+      font-size: 0.95em;
+    }
+
+    .form-group input,
+    .form-group textarea,
+    .form-group select {
+      width: 100%;
+      padding: 10px 12px;
+      background: rgba(50, 50, 80, 0.8);
+      border: 2px solid rgba(0, 212, 255, 0.3);
+      border-radius: 8px;
+      color: #e0e0e0;
+      font-size: 0.95em;
+      font-family: 'Roboto', sans-serif;
+      transition: all 0.3s ease;
+    }
+
+    .form-group input:focus,
+    .form-group textarea:focus,
+    .form-group select:focus {
+      outline: none;
+      border-color: #00d4ff;
+      background: rgba(50, 50, 80, 0.95);
+      box-shadow: 0 0 15px rgba(0, 212, 255, 0.4);
+    }
+
+    .form-group input::placeholder {
+      color: #888899;
+    }
+
+    .form-row {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 15px;
+    }
+
+    .submit-btn {
+      width: 100%;
+      padding: 14px 20px;
+      background: linear-gradient(90deg, #00d4ff 0%, #0099cc 100%);
       color: white;
       border: none;
-      padding: 10px 20px;
+      border-radius: 8px;
+      font-size: 1em;
+      font-weight: bold;
       cursor: pointer;
-      margin-right: 10px;
+      transition: all 0.3s ease;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+      box-shadow: 0 4px 15px rgba(0, 212, 255, 0.3);
+      margin-top: 10px;
+    }
+
+    .submit-btn:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 6px 25px rgba(0, 212, 255, 0.5);
+      background: linear-gradient(90deg, #00ffff 0%, #00bbee 100%);
+    }
+
+    .submit-btn:active {
+      transform: translateY(0);
+    }
+
+    .stats-grid-compact {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 12px;
+    }
+
+    .stat-card-compact {
+      background: linear-gradient(135deg, rgba(0, 212, 255, 0.1) 0%, rgba(100, 50, 200, 0.1) 100%);
+      border: 2px solid rgba(0, 212, 255, 0.3);
+      border-radius: 12px;
+      padding: 10px;
+      text-align: center;
+      transition: all 0.3s ease;
+      cursor: pointer;
+      backdrop-filter: blur(5px);
+      margin-bottom: 8px;
+    }
+
+    .stat-card-compact:hover {
+      transform: translateY(-3px);
+      border-color: #00d4ff;
+      box-shadow: 0 8px 25px rgba(0, 212, 255, 0.3);
+      background: linear-gradient(135deg, rgba(0, 212, 255, 0.2) 0%, rgba(100, 50, 200, 0.2) 100%);
+    }
+
+    .stat-card-compact h3 {
+      color: #b0b0ff;
+      font-size: 0.7em;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+      margin-bottom: 4px;
+    }
+
+    .stat-card-compact .number {
+      font-size: 1.5em;
+      color: #00d4ff;
+      font-weight: bold;
+      text-shadow: 0 0 10px rgba(0, 212, 255, 0.5);
+    }
+
+    @media (max-width: 1024px) {
+      .dashboard-wrapper {
+        grid-template-columns: 1fr;
+      }
+
+      .form-row {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    .recent-activity {
+      margin-top: 15px;
+      background: rgba(30, 30, 60, 0.8);
+      border: 1px solid rgba(0, 212, 255, 0.2);
+      border-radius: 12px;
+      padding: 15px;
+    }
+
+    .activity-item {
+      padding: 8px;
+      margin: 6px 0;
+      background: rgba(50, 50, 80, 0.5);
+      border-left: 4px solid #00d4ff;
       border-radius: 6px;
-      transition: background 0.3s;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      font-size: 0.85em;
     }
 
-    .tab-button:hover {
-      background-color: #1b4f72;
+    .activity-time {
+      color: #888899;
+      font-size: 0.75em;
     }
-
-    .tab-button.active {
-      background-color: #1b4f72;
-    }
-
-    .tab-content {
-      display: none;
-    }
-
-    .tab-content.active {
-      display: block;
-    }
-
   </style>
 </head>
+
 <body>
-
-  <div class="overlay">
-    <div class="user-info" id="userInfo" style="display: none;">
-      <span id="userName">User</span>
-      <button onclick="logout()">Logout</button>
+  <header>
+    <img src="clg-logo.jpg" alt="Sri Eshwar Logo">
+    <div>
+      <h2>Sri Eshwar College of Engineering</h2>
+      <p>Autonomous Institution | Hostel On-Duty Portal</p>
     </div>
+  </header>
 
-    <header>
-      <img src="clg-logo.jpg" alt="Sri Eshwar Logo">
-      <div>
-        <h2>Sri Eshwar College of Engineering</h2>
-        <p>Autonomous Institution | Coimbatore, Tamil Nadu</p>
+  <div class="container">
+    <div class="dashboard-wrapper">
+      <!-- LEFT SIDEBAR: Dashboard Overview & Quick Actions -->
+      <div class="left-sidebar">
+        <!-- Student Profile Card -->
+        <div class="profile-card">
+          <div class="profile-avatar">👨‍🎓</div>
+          <h3>Student Profile</h3>
+          <div class="profile-info">
+            <div class="info-row">
+              <span class="info-label">Name</span>
+              <span class="info-value" id="studentName">--</span>
+            </div>
+            <div class="info-row">
+              <span class="info-label">Roll No</span>
+              <span class="info-value" id="rollNumber">--</span>
+            </div>
+            <div class="info-row">
+              <span class="info-label">Semester</span>
+              <span class="info-value" id="semester">--</span>
+            </div>
+            <div class="info-row">
+              <span class="info-label">Email</span>
+              <span class="info-value" id="email" style="font-size: 0.85em;">--</span>
+            </div>
+          </div>
+        </div>
+
+
+        <h3 style="color: #00d4ff; margin-bottom: 15px; text-align: center;">Your Statistics</h3>
+        <div class="stats-grid-compact">
+          <div class="stat-card-compact">
+            <h3>✅ Approved</h3>
+            <div class="number" id="approvedCount">0</div>
+          </div>
+          <div class="stat-card-compact">
+            <h3>⏳ Pending</h3>
+            <div class="number" id="pendingCount">0</div>
+          </div>
+          <div class="stat-card-compact">
+            <h3>❌ Rejected</h3>
+            <div class="number" id="rejectedCount">0</div>
+          </div>
+          <div class="stat-card-compact">
+            <h3>📋 Total Days</h3>
+            <div class="number" id="totalDays">0</div>
+          </div>
+        </div>
+
+        <!-- Quick Actions -->
+        <div style="margin-top: 15px;">
+          <h3 style="color: #00d4ff; margin-bottom: 12px; font-size: 1em;">Actions</h3>
+          <div class="quick-actions">
+            <button class="action-btn" onclick="scrollToForm()">📝 Apply OD</button>
+            <button class="action-btn" onclick="alert('Feature coming soon!')">📋 My Apps</button>
+            <button class="action-btn" onclick="alert('Feature coming soon!')">⚙️ Settings</button>
+            <button class="action-btn" onclick="logout()">🚪 Logout</button>
+          </div>
+        </div>
+
+        <!-- Recent Activity -->
+        <div class="recent-activity">
+          <h3 style="color: #00d4ff; margin-bottom: 12px; font-size: 1em;">Recent Activity</h3>
+          <div id="activityList">
+            <div class="activity-item">
+              <div>
+                <p style="margin: 0; color: #e0e0e0;">No recent activity</p>
+              </div>
+              <span class="activity-time">--</span>
+            </div>
+          </div>
+        </div>
       </div>
-    </header>
 
-    <!-- ✅ Left-side department and title -->
-    <div class="left-labels">
-<!--     <h1>Department of</h1>
-      <h1>Electronics & Communication Engineering</h1>-->  
-      <h2>Hostel On-Duty</h2>
+      <!-- RIGHT CONTENT: OD Application Form -->
+      <div class="right-content">
+        <div class="od-form-container">
+          <h2>📝 Apply for On-Duty</h2>
+          <form id="applicationForm">
+            <div class="form-group">
+              <label for="name">Full Name</label>
+              <input type="text" id="name" placeholder="Enter your full name" required>
+            </div>
+
+            <div class="form-group">
+              <label for="regNo">Registration Number</label>
+              <input type="text" id="regNo" placeholder="e.g., 20CS001" required>
+            </div>
+
+            <div class="form-group">
+              <label for="parentName">Parent/Guardian Name</label>
+              <input type="text" id="parentName" placeholder="Enter parent/guardian name" required>
+            </div>
+
+            <div class="form-group">
+              <label for="reason">Reason for OD</label>
+              <textarea id="reason" placeholder="Describe the reason for on-duty request" rows="4" required></textarea>
+            </div>
+
+            <div class="form-row">
+              <div class="form-group">
+                <label for="fromDate">From Date</label>
+                <input type="date" id="fromDate" required>
+              </div>
+              <div class="form-group">
+                <label for="toDate">To Date</label>
+                <input type="date" id="toDate" required>
+              </div>
+            </div>
+
+            <button type="submit" class="submit-btn">✓ Submit Application</button>
+          </form>
+
+          <div id="message"></div>
+        </div>
+      </div>
     </div>
-
-    <div class="container">
-      <div class="tabs">
-        <button class="tab-button active" onclick="showTab('apply')">Apply for OD</button>
-        <button class="tab-button" onclick="showTab('history')">My OD History</button>
-      </div>
-
-      <div id="apply-tab" class="tab-content active">
-        <h2>Hostel On-Duty Apply</h2>
-        <form id="applicationForm">
-          <input id="name" type="text" placeholder="Your Name" required />
-          <input id="regNo" type="text" placeholder="Reg. No." required />
-          <input id="parentName" type="text" placeholder="Parent Name" required />
-          <input id="reason" type="text" placeholder="Reason for taking leave" required />
-          <label for="fromDate">From</label>
-          <input id="fromDate" type="date" required />
-          <label for="toDate">To</label>
-          <input id="toDate" type="date" required />
-          <button type="submit">Submit Application</button>
-        </form>
-        <p id="message"></p>
-      </div>
-
-      <div id="history-tab" class="tab-content">
-        <h2>My OD History</h2>
-        <ul id="historyList"></ul>
-      </div>
-    </div>
-<footer class="footer">
-  Powered by <strong>Dept. of ECE, SECE</strong>, 2026 &copy; All rights reserved.
-</footer>
   </div>
 
   <!-- Firebase SDKs -->
   <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-app-compat.js"></script>
   <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-firestore-compat.js"></script>
   <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-auth-compat.js"></script>
-  <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-analytics-compat.js"></script>
 
-  <!-- Firebase Config -->
+  <!-- Firebase Config & Logic -->
   <script src="firebase-config.js"></script>
+  <script src="student.js"></script>
   <script>
-    // Check authentication
-    auth.onAuthStateChanged(user => {
-      if (user) {
-        // User is logged in
-        console.log("✅ User logged in:", user.email);
-        document.getElementById("userInfo").style.display = "flex";
-        
-        // Fetch user name from Firestore if available
+    // Initialize dashboard with actual Firebase data
+    document.addEventListener('DOMContentLoaded', function () {
+      // Check authentication first
+      auth.onAuthStateChanged(user => {
+        if (!user) {
+          window.location.href = "login.html";
+          return;
+        }
+
+        // Load dashboard data
+        loadDashboardData();
+
+        // Pre-fill form with user's actual data
         db.collection("users").doc(user.uid).get()
           .then(doc => {
             if (doc.exists) {
-              document.getElementById("userName").textContent = doc.data().name || user.email;
-            } else {
-              document.getElementById("userName").textContent = user.email;
+              const userData = doc.data();
+              document.getElementById('name').value = userData.name || '';
+              document.getElementById('regNo').value = userData.rollNumber || userData.regNo || '';
+              document.getElementById('parentName').value = userData.parentName || '';
             }
           })
-          .catch(error => {
-            console.error("Error fetching user data:", error);
-            document.getElementById("userName").textContent = user.email;
-          });
-      } else {
-        // User is not logged in, redirect to login page
-        console.log("🔒 No user logged in, redirecting to login page");
-        window.location.href = "login.html";
-      }
+          .catch(error => console.error("Error loading form data:", error));
+      });
     });
 
-    function logout() {
-      auth.signOut()
-        .then(() => {
-          console.log("✅ User logged out");
+    function scrollToForm() {
+      const formContainer = document.querySelector('.od-form-container');
+      formContainer.scrollIntoView({ behavior: 'smooth', block: 'start' });
+      document.getElementById('reason').focus();
+    }
+
+    function loadDashboardData() {
+      // Check if user is logged in
+      auth.onAuthStateChanged(user => {
+        console.log("Auth state changed, user:", user ? "authenticated" : "not authenticated");
+        if (user) {
+          console.log("User email:", user.email);
+          console.log("User UID:", user.uid);
+        }
+        if (!user) {
+          // User not logged in, redirect to login
           window.location.href = "login.html";
+          return;
+        }
+
+        // Get user data from auth
+        const email = user.email || 'N/A';
+        document.getElementById('email').textContent = email;
+
+        // Derive a fallback "id" from email (before @)
+        const emailId = email !== 'N/A' ? (email.split('@')[0] || '') : '';
+
+        // Fetch user profile from Firestore users collection
+        console.log("Fetching user document for UID:", user.uid);
+        db.collection("users").doc(user.uid).get()
+          .then(doc => {
+            console.log("Document exists:", doc.exists);
+            if (!doc.exists) {
+              console.log("User document not found. Auto-creation restricted.");
+              alert("You do not have a registered profile. Please sign up to create an account.");
+              return auth.signOut().then(() => {
+                window.location.href = "login.html";
+                return null;
+              });
+            } else {
+              console.log("Document data:", doc.data());
+              return doc.data();
+            }
+          })
+          .then(userData => {
+            console.log("User profile loaded for display");
+
+            // Name
+            document.getElementById('studentName').textContent =
+              userData.name || user.displayName || emailId || 'N/A';
+
+            // Check if we need to update missing roll number data
+            if (!userData.rollNumber && userData.regNo) {
+              console.log("Updating rollNumber from regNo:", userData.regNo);
+              db.collection("users").doc(user.uid).update({
+                rollNumber: userData.regNo
+              }).catch(error => {
+                console.error("Error updating rollNumber:", error);
+              });
+            }
+
+            // Roll / Reg no: prefer stored rollNumber, then regNo, then username/email id
+            let roll = 'N/A';
+            if (userData.rollNumber && String(userData.rollNumber).trim()) {
+              roll = String(userData.rollNumber).trim();
+            } else if (userData.regNo && String(userData.regNo).trim()) {
+              roll = String(userData.regNo).trim();
+            } else if (userData.username && String(userData.username).trim()) {
+              roll = String(userData.username).trim();
+            } else if (emailId) {
+              roll = emailId;
+            }
+            document.getElementById('rollNumber').textContent = roll;
+
+            // Check if we need to update missing semester data
+            let sem = userData.semester; // Declare sem variable
+            if (userData.year && (!userData.semester || userData.semester.trim() === '')) {
+              const yearMap = { 'I': '1st Year', 'II': '2nd Year', 'III': '3rd Year', 'IV': '4th Year' };
+              const calculatedSemester = yearMap[userData.year] || `${userData.year} Year`;
+              console.log("Updating missing semester data to:", calculatedSemester);
+
+              // Update the user document with the calculated semester
+              db.collection("users").doc(user.uid).update({
+                semester: calculatedSemester
+              }).then(() => {
+                console.log("Semester data updated successfully");
+                sem = calculatedSemester; // Use the updated value
+              }).catch(error => {
+                console.error("Error updating semester:", error);
+              });
+            }
+
+            // Semester: convert Roman numerals to readable format
+            if (!sem || sem.trim() === '') {
+              if (userData.year) {
+                const yearMap = { 'I': '1st Year', 'II': '2nd Year', 'III': '3rd Year', 'IV': '4th Year' };
+                sem = yearMap[userData.year] || `${userData.year} Year`;
+                console.log("Converted semester from year:", sem); // Debug log
+              }
+            }
+            document.getElementById('semester').textContent = sem || 'Not specified';
+          })
+          .catch(error => {
+            console.error("Error loading user profile:", error);
+            console.error("Error code:", error.code);
+            console.error("Error message:", error.message);
+
+            // Provide fallback data from auth
+            const fallbackName = user.displayName || (user.email ? user.email.split('@')[0] : 'Unknown');
+            const fallbackRoll = user.email ? user.email.split('@')[0] : 'Unknown';
+
+            document.getElementById('studentName').textContent = fallbackName;
+            document.getElementById('rollNumber').textContent = fallbackRoll;
+            document.getElementById('semester').textContent = 'Please update profile';
+          });
+
+        // Fetch OD applications for this user
+        db.collection("od_applications")
+          .where("userId", "==", user.uid)
+          .get()
+          .then(snapshot => {
+            let approved = 0;
+            let pending = 0;
+            let rejected = 0;
+            let totalDays = 0;
+
+            snapshot.forEach(doc => {
+              const app = doc.data();
+              const status = app.status ? app.status.toLowerCase() : '';
+
+              // Count by status
+              if (status === 'approved') approved++;
+              else if (status === 'pending') pending++;
+              else if (status === 'rejected') rejected++;
+
+              // Calculate days if dates exist
+              if (app.fromDate && app.toDate) {
+                try {
+                  const from = new Date(app.fromDate);
+                  const to = new Date(app.toDate);
+                  const days = Math.ceil((to - from) / (1000 * 60 * 60 * 24)) + 1;
+                  if (!isNaN(days) && days > 0) {
+                    totalDays += days;
+                  }
+                } catch (e) {
+                  console.log("Error calculating days");
+                }
+              }
+            });
+
+            const total = approved + pending + rejected;
+
+            // Update stat cards
+            document.getElementById('approvedCount').textContent = approved;
+            document.getElementById('pendingCount').textContent = pending;
+            document.getElementById('rejectedCount').textContent = rejected;
+            document.getElementById('totalDays').textContent = totalDays;
+
+            // Load recent activity
+            loadRecentActivity(user.uid);
+          })
+          .catch(error => {
+            console.error("Error fetching OD applications:", error);
+            document.getElementById('approvedCount').textContent = '0';
+            document.getElementById('pendingCount').textContent = '0';
+            document.getElementById('rejectedCount').textContent = '0';
+            document.getElementById('totalDays').textContent = '0';
+          });
+      });
+    }
+
+    function loadRecentActivity(userId) {
+      db.collection("od_applications")
+        .where("userId", "==", userId)
+        .orderBy("submittedAt", "desc")
+        .limit(5)
+        .get()
+        .then(snapshot => {
+          const activities = [];
+          snapshot.forEach(doc => {
+            const app = doc.data();
+            const status = app.status || 'Pending';
+            let title = `Application ${status}`;
+
+            if (status.toLowerCase() === 'approved') {
+              title = '✅ Application Approved';
+            } else if (status.toLowerCase() === 'pending') {
+              title = '⏳ Application Pending';
+            } else if (status.toLowerCase() === 'rejected') {
+              title = '❌ Application Rejected';
+            }
+
+            const date = app.submittedAt ? app.submittedAt.toDate() : new Date();
+            const formattedDate = date.toLocaleDateString('en-US', {
+              year: 'numeric',
+              month: 'short',
+              day: 'numeric'
+            });
+
+            activities.push({
+              title: title,
+              date: formattedDate
+            });
+          });
+
+          const activityList = document.getElementById('activityList');
+          if (activities.length === 0) {
+            activityList.innerHTML = `
+              <div class="activity-item">
+                <div>
+                  <p style="margin: 0; color: #e0e0e0;">No applications yet</p>
+                </div>
+                <span class="activity-time">--</span>
+              </div>
+            `;
+          } else {
+            activityList.innerHTML = activities.map(activity => `
+              <div class="activity-item">
+                <div>
+                  <p style="margin: 0; color: #e0e0e0;">${activity.title}</p>
+                </div>
+                <span class="activity-time">${activity.date}</span>
+              </div>
+            `).join('');
+          }
         })
         .catch(error => {
-          console.error("🚨 Logout error:", error);
+          console.error("Error loading recent activity:", error);
         });
     }
-  </script>
-  <script src="student.js"></script>
-  
 
+    function logout() {
+      if (confirm('Are you sure you want to logout?')) {
+        auth.signOut()
+          .then(() => {
+            try {
+              localStorage.removeItem('userRole');
+            } catch (e) {
+              console.warn('Unable to clear userRole from localStorage', e);
+            }
+            window.location.href = 'login.html';
+          })
+          .catch(error => {
+            console.error('Error during logout:', error);
+            alert('Logout failed. Please try again.');
+          });
+      }
+    }
+  </script>
 </body>
+
 </html>

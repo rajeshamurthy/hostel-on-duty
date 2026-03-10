@@ -2,200 +2,226 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <title>Sign Up - Hoster On-Duty Booking</title>
-  <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&family=Orbitron:wght@700&display=swap" rel="stylesheet">
+  <title>Sign Up - Hostel On-Duty Booking</title>
+  <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&display=swap" rel="stylesheet">
   <style>
     * {
       box-sizing: border-box;
     }
 
-    body, html {
+    html, body {
       margin: 0;
       padding: 0;
       height: 100%;
       font-family: 'Roboto', sans-serif;
+      background: radial-gradient(circle at top, #1b2845 0%, #050816 55%, #02010a 100%);
+      color: #e0e0ff;
     }
 
     body {
-      background: url('image.jpg') no-repeat center center fixed;
-      background-size: cover;
+      display: block;
     }
 
     .overlay {
-      background-color: rgba(255, 255, 255, 0.85);
+      width: 100%;
       min-height: 100vh;
+      padding: 30px 15px 24px;
       display: flex;
       flex-direction: column;
       align-items: center;
-      justify-content: center;
-      padding: 20px;
-      position: relative;
+      justify-content: flex-start;
+      background: radial-gradient(circle at top left, rgba(0, 212, 255, 0.15), transparent 55%),
+                  radial-gradient(circle at bottom right, rgba(100, 50, 200, 0.25), transparent 60%);
     }
 
     header {
       display: flex;
       align-items: center;
-      padding: 10px 20px;
-      background-color: #ffffffcc;
-      box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
-      border-radius: 10px;
-      margin-bottom: 40px;
+      padding: 12px 20px;
+      background: linear-gradient(135deg, rgba(0, 212, 255, 0.15), rgba(100, 50, 200, 0.15));
+      border: 1px solid rgba(0, 212, 255, 0.4);
+      border-radius: 14px;
+      margin-bottom: 24px;
       width: 100%;
-      max-width: 550px;
+      max-width: 560px;
+      box-shadow: 0 12px 40px rgba(0, 0, 0, 0.5);
+      backdrop-filter: blur(14px);
     }
 
     header img {
-      height: 80px;
-      margin-right: 15px;
+      height: 64px;
+      margin-right: 16px;
+      border-radius: 8px;
     }
 
     header h2 {
       margin: 0;
-      color: #2c3e50;
+      color: #00d4ff;
+      font-size: 1.1rem;
+      letter-spacing: 0.5px;
     }
 
     header p {
       margin: 4px 0 0;
-      color: #555;
+      color: #b0b0ff;
+      font-size: 0.85rem;
     }
 
     .signup-container {
       width: 100%;
-      max-width: 550px;
-      background-color: #ffffff;
-      padding: 40px;
-      border-radius: 10px;
-      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+      max-width: 560px;
+      background: linear-gradient(135deg, rgba(0, 212, 255, 0.08), rgba(100, 50, 200, 0.12));
+      border: 1px solid rgba(0, 212, 255, 0.35);
+      padding: 28px 24px 22px;
+      border-radius: 16px;
+      box-shadow: 0 18px 55px rgba(0, 0, 0, 0.7);
+      backdrop-filter: blur(18px);
     }
 
     .signup-container h2 {
       text-align: center;
-      margin-bottom: 10px;
-      color: #2e86de;
-      font-size: 28px;
+      margin: 0 0 6px;
+      color: #00d4ff;
+      font-size: 1.45rem;
+      letter-spacing: 0.5px;
     }
 
     .signup-container p {
       text-align: center;
-      color: #666;
-      margin-bottom: 25px;
-      font-size: 14px;
+      color: #b0b0ff;
+      margin: 0 0 18px;
+      font-size: 0.9rem;
     }
 
     .form-group {
-      margin-bottom: 15px;
+      margin-bottom: 14px;
     }
 
     .form-row {
       display: grid;
       grid-template-columns: 1fr 1fr;
-      gap: 15px;
+      gap: 14px;
     }
 
     label {
       display: block;
-      font-size: 13px;
-      font-weight: 600;
-      color: #333;
-      margin-bottom: 5px;
+      font-size: 0.8rem;
+      font-weight: 500;
+      color: #b0b0ff;
+      margin-bottom: 6px;
     }
 
     input, select {
       width: 100%;
-      padding: 11px;
-      border: 1px solid #ddd;
-      border-radius: 6px;
-      font-size: 14px;
-      transition: border-color 0.3s;
+      padding: 10px 12px;
+      border-radius: 10px;
+      border: 1px solid rgba(0, 212, 255, 0.35);
+      background: rgba(10, 16, 35, 0.9);
+      color: #e0e0ff;
+      font-size: 0.9rem;
+      transition: all 0.25s ease;
       font-family: 'Roboto', sans-serif;
+    }
+
+    input::placeholder {
+      color: #7c7ca8;
     }
 
     input:focus, select:focus {
       outline: none;
-      border-color: #2e86de;
-      box-shadow: 0 0 5px rgba(46, 134, 222, 0.3);
+      border-color: #00d4ff;
+      box-shadow: 0 0 0 1px rgba(0, 212, 255, 0.6);
+      background: rgba(10, 20, 50, 0.95);
     }
 
     .username-group {
       display: flex;
-      align-items: flex-end;
+      align-items: stretch;
       gap: 0;
     }
 
     .username-group input {
       flex: 1;
-      border-radius: 6px 0 0 6px;
+      border-radius: 10px 0 0 10px;
     }
 
     .username-extension {
-      background-color: #f0f0f0;
-      border: 1px solid #ddd;
+      background: rgba(15, 22, 50, 0.95);
+      border: 1px solid rgba(0, 212, 255, 0.38);
       border-left: none;
-      border-radius: 0 6px 6px 0;
-      padding: 11px 12px;
-      font-size: 14px;
-      color: #666;
+      border-radius: 0 10px 10px 0;
+      padding: 10px 12px;
+      font-size: 0.9rem;
+      color: #9a9ad0;
       font-weight: 600;
       display: flex;
       align-items: center;
-      min-width: 120px;
+      min-width: 130px;
     }
 
     button {
       width: 100%;
       padding: 12px;
-      margin-top: 25px;
-      background-color: #2e86de;
-      color: white;
+      margin-top: 18px;
+      background: linear-gradient(90deg, #00d4ff, #0099cc);
+      color: #050816;
       border: none;
-      border-radius: 6px;
-      font-size: 16px;
-      font-weight: bold;
+      border-radius: 999px;
+      font-size: 0.95rem;
+      font-weight: 700;
       cursor: pointer;
-      transition: background 0.3s;
+      transition: all 0.25s ease;
+      letter-spacing: 0.8px;
+      text-transform: uppercase;
+      box-shadow: 0 12px 30px rgba(0, 212, 255, 0.45);
     }
 
     button:hover {
-      background-color: #1b4f72;
+      transform: translateY(-2px);
+      box-shadow: 0 16px 40px rgba(0, 212, 255, 0.7);
+      background: linear-gradient(90deg, #00ffff, #00bbee);
     }
 
     button:active {
-      transform: scale(0.98);
+      transform: translateY(0);
+      box-shadow: 0 8px 22px rgba(0, 212, 255, 0.4);
     }
 
     #message {
-      margin-top: 15px;
-      padding: 10px;
+      margin-top: 12px;
+      padding: 8px 10px;
       text-align: center;
-      border-radius: 6px;
+      border-radius: 8px;
       display: none;
-      font-size: 14px;
+      font-size: 0.85rem;
     }
 
     #message.error {
-      background-color: #ffe5e5;
-      color: #d32f2f;
+      background-color: rgba(255, 102, 102, 0.14);
+      color: #ff8080;
+      border: 1px solid rgba(255, 102, 102, 0.6);
       display: block;
     }
 
     #message.success {
-      background-color: #e5ffe5;
-      color: #388e3c;
+      background-color: rgba(68, 255, 140, 0.14);
+      color: #6dff9a;
+      border: 1px solid rgba(68, 255, 140, 0.6);
       display: block;
     }
 
     .toggle-form {
       text-align: center;
-      margin-top: 20px;
-      color: #666;
-      font-size: 14px;
+      margin-top: 14px;
+      color: #9a9ad0;
+      font-size: 0.85rem;
     }
 
     .toggle-form a {
-      color: #2e86de;
+      color: #00d4ff;
       cursor: pointer;
       text-decoration: none;
-      font-weight: bold;
+      font-weight: 600;
     }
 
     .toggle-form a:hover {
@@ -204,20 +230,17 @@
 
     .footer {
       text-align: center;
-      padding: 15px 10px;
-      font-family: 'Roboto', sans-serif;
-      font-size: 12px;
-      color: #ffffff;
-      background-color: rgba(0, 0, 0, 0.7);
-      position: absolute;
-      bottom: 0;
-      width: 100%;
+      padding: 10px 8px;
+      font-size: 0.75rem;
+      color: #8888b4;
+      margin-top: 16px;
     }
 
     @media (max-width: 600px) {
       header {
         flex-direction: column;
         text-align: center;
+        max-width: 360px;
       }
 
       header img {
@@ -226,11 +249,11 @@
       }
 
       .signup-container {
-        padding: 25px;
+        padding: 22px 18px 18px;
       }
 
       .signup-container h2 {
-        font-size: 22px;
+        font-size: 1.25rem;
       }
 
       .form-row {
@@ -242,15 +265,16 @@
       }
 
       .username-group input {
-        border-radius: 6px;
-        margin-bottom: 10px;
+        border-radius: 10px;
+        margin-bottom: 8px;
       }
 
       .username-extension {
         width: 100%;
-        border-radius: 6px;
-        border-left: 1px solid #ddd;
+        border-radius: 10px;
+        border-left: 1px solid rgba(0, 212, 255, 0.38);
         min-width: unset;
+        justify-content: center;
       }
     }
   </style>
@@ -267,8 +291,8 @@
     </header>
 
     <div class="signup-container">
-      <h2>Create Account</h2>
-      <p>Register for Hostel On-Duty Booking</p>
+      <h2>Create Student Account</h2>
+      <p>Register once to access the Hostel On-Duty Portal</p>
 
       <form id="signupForm" onsubmit="handleSignup(event)">
         
@@ -279,6 +303,17 @@
             type="text" 
             id="name" 
             placeholder="Enter your full name" 
+            required 
+          />
+        </div>
+
+        <!-- Registration / Roll Number -->
+        <div class="form-group">
+          <label for="rollNumber">Registration / Roll Number</label>
+          <input 
+            type="text" 
+            id="rollNumber" 
+            placeholder="e.g., 20CS001, 21ECE045" 
             required 
           />
         </div>

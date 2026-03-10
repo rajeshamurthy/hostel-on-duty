@@ -1,0 +1,37 @@
+query ListAllHostels @auth(level: PUBLIC, insecureReason: "This operation is safe to expose to the public") {
+  hostels {
+    id
+    name
+    location
+    description
+  }
+}
+
+query GetHostelById($id: UUID!) @auth(level: PUBLIC, insecureReason: "This operation is safe to expose to the public") {
+  hostel(key: {id: $id}) {
+    id
+    name
+    location
+    description
+    rooms {
+      id
+      roomNumber
+      capacity
+      pricePerNight
+    }
+  }
+}
+
+mutation CreateNewHostel($name: String!, $location: String!, $description: String!) @auth(level: USER, insecureReason: "This operation is safe to expose to all logged in users.") {
+  hostel_insert(data: {
+    name: $name,
+    location: $location,
+    description: $description
+  })
+}
+
+mutation UpdateHostelDescription($id: UUID!, $description: String!) @auth(level: USER, insecureReason: "This operation is safe to expose to all logged in users.") {
+  hostel_update(key: {id: $id}, data: {
+    description: $description
+  })
+}

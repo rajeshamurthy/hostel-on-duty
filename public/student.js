@@ -27,29 +27,52 @@ document.getElementById("applicationForm").addEventListener("submit", function(e
 
   console.log("Validation passed");
 
-  // Generate random 5-digit acknowledgment number
+  // Fetch user profile for department & year, then submit
   const acknowledgmentNumber = Math.floor(10000 + Math.random() * 90000);
-  console.log("Acknowledgment generated:", acknowledgmentNumber);
 
-  db.collection("od_applications").add({
-    name,
-    regNo,
-    parentName,
-    reason,
-    fromDate,
-    toDate,
-    acknowledgmentNumber,
-    userId: auth.currentUser.uid,
-    status: "Pending",
-    submittedAt: new Date()
-  })
+  db.collection("users").doc(auth.currentUser.uid).get()
+    .then(userDoc => {
+      const userData = userDoc.exists ? userDoc.data() : {};
+      const department = userData.department || "-";
+      const year = userData.year || "-";
+      const semester = userData.year ? userData.year + " Year" : "-";
+
+      // Update user profile with rollNumber if missing (helps existing users)
+      let chain = Promise.resolve();
+      if (!userData.rollNumber && regNo) {
+        chain = db.collection("users").doc(auth.currentUser.uid).set(
+          { rollNumber: regNo, regNo: regNo },
+          { merge: true }
+        );
+      }
+
+      return chain.then(() => db.collection("od_applications").add({
+        name,
+        regNo,
+        parentName,
+        reason,
+        fromDate,
+        toDate,
+        department,
+        year,
+        semester,
+        acknowledgmentNumber,
+        userId: auth.currentUser.uid,
+        status: "Pending",
+        submittedAt: new Date()
+      }));
+    })
   .then(() => {
     console.log("Application added to Firestore");
     alert(`Application submitted successfully! Your acknowledgment number is: ${acknowledgmentNumber}`);
     document.getElementById("message").innerText = `Application submitted successfully! Acknowledgment Number: ${acknowledgmentNumber}`;
     document.getElementById("applicationForm").reset();
-    loadHistory(); // Refresh history after submission
-    console.log("📄 Application added to Firestore with acknowledgment:", acknowledgmentNumber);
+    if (typeof loadDashboardData === "function") loadDashboardData();
+    if (typeof loadHistory === "function") {
+      const historyList = document.getElementById("historyList");
+      if (historyList) loadHistory();
+    }
+    console.log("📄 Application added to Firestore");
   })
   .catch(error => {
     console.error("Error submitting application:", error);
@@ -60,6 +83,7 @@ document.getElementById("applicationForm").addEventListener("submit", function(e
 // Load user's OD history
 function loadHistory() {
   const historyList = document.getElementById("historyList");
+  if (!historyList) return;
   historyList.innerHTML = "Loading...";
 
   db.collection("od_applications")

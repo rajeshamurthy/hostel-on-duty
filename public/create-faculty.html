@@ -1,0 +1,230 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Create Faculty Account - Admin</title>
+  <link rel="stylesheet" href="style.css">
+  <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&display=swap" rel="stylesheet">
+  <style>
+    .create-faculty-card {
+      max-width: 480px;
+      margin: 30px auto;
+      background: linear-gradient(135deg, rgba(255, 100, 0, 0.15), rgba(255, 0, 127, 0.15));
+      border: 2px solid rgba(255, 100, 0, 0.4);
+      border-radius: 16px;
+      padding: 28px;
+      box-shadow: 0 18px 55px rgba(0, 0, 0, 0.5);
+    }
+
+    .create-faculty-card h2 {
+      color: #ff007f;
+      margin: 0 0 20px;
+    }
+
+    .create-faculty-card label {
+      display: block;
+      color: #ffaa44;
+      margin-bottom: 6px;
+      font-weight: 500;
+    }
+
+    .create-faculty-card input,
+    .create-faculty-card select {
+      width: 100%;
+      padding: 10px 12px;
+      margin-bottom: 14px;
+      border-radius: 8px;
+      border: 1px solid rgba(255, 100, 0, 0.4);
+      background: rgba(10, 16, 35, 0.9);
+      color: #e0e0e0;
+    }
+
+    .create-faculty-card button {
+      width: 100%;
+      padding: 12px;
+      background: linear-gradient(90deg, #ff007f, #ff6600);
+      color: white;
+      border: none;
+      border-radius: 8px;
+      font-weight: bold;
+      cursor: pointer;
+      margin-top: 10px;
+    }
+
+    .create-faculty-card button:hover {
+      opacity: 0.9;
+    }
+
+    .username-row {
+      display: flex;
+      gap: 0;
+    }
+
+    .username-row input {
+      flex: 1;
+      border-radius: 8px 0 0 8px;
+    }
+
+    .username-row .suffix {
+      background: rgba(20, 25, 50, 0.9);
+      border: 1px solid rgba(255, 100, 0, 0.4);
+      border-left: none;
+      padding: 10px 12px;
+      color: #ffaa44;
+      border-radius: 0 8px 8px 0;
+      display: flex;
+      align-items: center;
+    }
+
+    #message {
+      margin-top: 12px;
+      padding: 10px;
+      border-radius: 8px;
+      display: none;
+    }
+
+    #message.error {
+      background: rgba(255, 80, 80, 0.2);
+      color: #ff8080;
+      display: block;
+    }
+
+    #message.success {
+      background: rgba(80, 255, 80, 0.2);
+      color: #6dff9a;
+      display: block;
+    }
+
+    .back-link {
+      display: inline-block;
+      margin-bottom: 20px;
+      color: #ff007f;
+      text-decoration: none;
+    }
+
+    .back-link:hover {
+      text-decoration: underline;
+    }
+  </style>
+</head>
+
+<body>
+  <header>
+    <img src="clg-logo.jpg" alt="Sri Eshwar Logo">
+    <div>
+      <h2>Sri Eshwar College of Engineering</h2>
+      <p>Create Faculty Account - Admin Only</p>
+    </div>
+  </header>
+
+  <div class="container">
+    <a href="admin.html" class="back-link">← Back to Admin Dashboard</a>
+
+    <div class="create-faculty-card">
+      <h2>Create Faculty Login</h2>
+      <p style="color: #b0b0ff; margin-bottom: 20px; font-size: 0.9rem;">
+        Enter faculty details. After creation, you will be signed out. Share the credentials with the faculty member.
+      </p>
+
+      <form id="createFacultyForm" onsubmit="handleCreateFaculty(event)">
+        <label for="facultyName">Full Name</label>
+        <input type="text" id="facultyName" placeholder="e.g., Dr. John Smith" required>
+
+        <label for="facultyUsername">Username (institutional)</label>
+        <div class="username-row">
+          <input type="text" id="facultyUsername" placeholder="e.g., john.smith" required>
+          <span class="suffix">@sece.ac.in</span>
+        </div>
+
+        <label for="facultyPassword">Password (min 6 characters)</label>
+        <input type="password" id="facultyPassword" placeholder="Set a password for faculty" required minlength="6">
+
+        <label for="facultyDepartment">Department</label>
+        <select id="facultyDepartment" required>
+          <option value="">Select Department</option>
+          <option value="ECE">ECE</option>
+          <option value="CSE">CSE</option>
+          <option value="EEE">EEE</option>
+          <option value="MECH">MECH</option>
+          <option value="CSE-Cybersecurity">CSE (Cybersecurity)</option>
+          <option value="AIDS">AIDS</option>
+          <option value="CSE-AIML">CSE (AIML)</option>
+          <option value="IT">IT</option>
+          <option value="CSBS">CSBS</option>
+        </select>
+
+        <button type="submit">Create Faculty Account</button>
+      </form>
+      <div id="message"></div>
+    </div>
+  </div>
+
+  <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-app-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-firestore-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-auth-compat.js"></script>
+  <script src="firebase-config.js"></script>
+  <script>
+    auth.onAuthStateChanged(user => {
+      if (!user) window.location.href = "login.html";
+    });
+
+    function showMsg(msg, isError) {
+      const el = document.getElementById("message");
+      el.textContent = msg;
+      el.className = isError ? "error" : "success";
+    }
+
+    function handleCreateFaculty(e) {
+      e.preventDefault();
+
+      const name = document.getElementById("facultyName").value.trim();
+      const username = document.getElementById("facultyUsername").value.trim();
+      const password = document.getElementById("facultyPassword").value;
+      const department = document.getElementById("facultyDepartment").value;
+
+      const email = username + "@sece.ac.in";
+
+      showMsg("Creating faculty account...", false);
+
+      const secondaryApp = firebase.initializeApp(firebase.app().options, "Secondary");
+      const secondaryAuth = secondaryApp.auth();
+
+      secondaryAuth.setPersistence(firebase.auth.Auth.Persistence.NONE || 'none')
+        .then(() => secondaryAuth.createUserWithEmailAndPassword(email, password))
+        .then(userCredential => {
+
+          const user = userCredential.user;
+
+          return db.collection("users").doc(user.uid).set({
+            name,
+            username,
+            institutionalEmail: email,
+            department,
+            role: "faculty",
+            createdAt: new Date(),
+            status: "active",
+            createdBy: "admin"
+          });
+
+        })
+        .then(() => {
+
+          showMsg("Faculty account created successfully!", false);
+
+          secondaryAuth.signOut();
+          secondaryApp.delete();
+
+        })
+        .catch(err => {
+
+          console.error("Error:", err);
+          showMsg("Failed: " + err.message, true);
+
+        });
+    }
+  </script>
+</body>
+
+</html>
